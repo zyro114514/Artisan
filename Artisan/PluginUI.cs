@@ -319,7 +319,7 @@ namespace Artisan
 
 
                 if (Handler.RecipeID != 0)
-                ImGui.Checkbox("Endurance Mode Toggle", ref Handler.Enable);
+                ImGui.Checkbox("耐力模式", ref Handler.Enable);
 
                 if (Service.Configuration.CraftingX && Handler.Enable)
                 {
@@ -327,7 +327,7 @@ namespace Artisan
                 }
 
 #if DEBUG
-                ImGui.Checkbox("Trial Craft Repeat", ref repeatTrial);
+                ImGui.Checkbox("重复制作练习", ref repeatTrial);
 #endif
                 //bool failureCheck = Service.Configuration.DisableFailurePrediction;
 
@@ -338,13 +338,13 @@ namespace Artisan
                 //}
                 //ImGuiComponents.HelpMarker($"Disabling failure prediction may result in items failing to be crafted.\nUse at your own discretion.");
 
-                ImGui.Text("Semi-Manual Mode");
+                ImGui.Text("半自动模式");
 
-                if (ImGui.Button("Execute recommended action"))
+                if (ImGui.Button("执行建议的操作"))
                 {
                     Hotbars.ExecuteRecommended(CurrentRecommendation);
                 }
-                if (ImGui.Button("Fetch Recommendation"))
+                if (ImGui.Button("获取建议"))
                 {
                     Artisan.FetchRecommendation(CurrentStep);
                 }
