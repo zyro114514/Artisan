@@ -43,16 +43,16 @@ namespace Artisan.CraftingLists
 
         internal static void Draw()
         {
-            string hoverText = "!! HOVER FOR INFORMATION !!";
+            string hoverText = "!! 悬停以获取信息 !!";
             var hoverLength = ImGui.CalcTextSize(hoverText);
             ImGui.SetCursorPosX((ImGui.GetContentRegionAvail().X / 2) - (hoverLength.Length() / 2));
             ImGui.TextColored(ImGuiColors.DalamudYellow, hoverText);
             if (ImGui.IsItemHovered())
             {
-                ImGui.TextWrapped($"You can use this tab to see what items you can craft with the items in your inventory. You can also use it to create a quick crafting list that Artisan will try and work through.");
-                ImGui.TextWrapped($"Please note that due to heavy computational requirements, filtering the recipe list to show only recipes you have ingredients for will not take into account raw ingredients for any crafted items. This may be addressed in the future. For now, it will only look at final ingredients *only* for a given recipe.");
-                ImGui.TextWrapped($"Crafting lists process from top to bottom, so ensure any pre-requsite crafts come first.");
-                ImGui.TextWrapped("Please ensure that you have gearsets saved for each job you have items to craft. Also if you require the usage of food and/or potions, please do so before starting the crafting list as this will not be automated.");
+                ImGui.TextWrapped($"您可以使用此选项卡查看您可以使用背包中的物品制作哪些物品。您还可以使用它来创建Artisan将尝试完成的快速制作清单。");
+                ImGui.TextWrapped($"请注意，由于繁重的计算需求，过滤了配方列表以仅显示您拥有其材料的配方，不会考虑任何制作品的材料。这可能会在未来得到解决。目前，它*仅*会查看给定配方的最终成分。");
+                ImGui.TextWrapped($"制作清单从上到下处理，因此请确保高优先级的制作品排在第一位。");
+                ImGui.TextWrapped("请确保为每个需要制作物品的职业保存套装。此外，如果您需要使用食物和/或药水，请在开始制作清单之前这样做，因为这不会自动进行。");
             }
             ImGui.Separator();
 
@@ -62,7 +62,7 @@ namespace Artisan.CraftingLists
 
         private static void DrawListOptions()
         {
-            if (ImGui.Button("New List"))
+            if (ImGui.Button("新建清单"))
             {
                 keyboardFocus = true;
                 ImGui.OpenPopup("NewCraftingList");
@@ -87,7 +87,7 @@ namespace Artisan.CraftingLists
                 }
 
                 longestName = Math.Max(150, longestName);
-                ImGui.Text("Crafting Lists");
+                ImGui.Text("制作清单");
                 if (ImGui.BeginChild("###craftListSelector", new Vector2(longestName + 40, 0), true))
                 {
                     foreach (CraftingList l in Service.Configuration.CraftingLists)
@@ -113,8 +113,8 @@ namespace Artisan.CraftingLists
                     ImGui.SameLine();
                     if (ImGui.BeginChild("###selectedList", new Vector2(0, ImGui.GetContentRegionAvail().Y), false))
                     {
-                        ImGui.Text($"Selected List: {selectedList.Name}");
-                        if (ImGui.Button("Delete List (Hold Ctrl)") && ImGui.GetIO().KeyCtrl)
+                        ImGui.Text($"选择的清单: {selectedList.Name}");
+                        if (ImGui.Button("删除清单（按住Ctrl）") && ImGui.GetIO().KeyCtrl)
                         {
                             Service.Configuration.CraftingLists.Remove(selectedList);
 
@@ -127,11 +127,11 @@ namespace Artisan.CraftingLists
 
                         if (selectedList.Items.Count > 0)
                         {
-                            if (ImGui.CollapsingHeader("List Items"))
+                            if (ImGui.CollapsingHeader("清单物品"))
                             {
 
                                 ImGui.Columns(2, null, false);
-                                ImGui.Text("Current Items");
+                                ImGui.Text("当前物品");
                                 ImGui.Indent();
                                 var loop = 1;
                                 foreach (var item in CollectionsMarshal.AsSpan(selectedList.Items.Distinct().ToList()))
@@ -149,7 +149,7 @@ namespace Artisan.CraftingLists
                                 ImGui.NextColumn();
                                 if (selectedListItem != 0)
                                 {
-                                    ImGui.Text("Options");
+                                    ImGui.Text("选项");
                                     if (ImGuiComponents.IconButton(Dalamud.Interface.FontAwesomeIcon.Trash))
                                     {
                                         selectedList.Items.RemoveAll(x => x == selectedListItem);
@@ -179,7 +179,7 @@ namespace Artisan.CraftingLists
                                     }
                                     if (selectedList.Items.Distinct().Count() > 1)
                                     {
-                                        ImGui.Text("Re-order list");
+                                        ImGui.Text("清单排序");
                                         ImGui.SameLine();
 
                                         bool isFirstItem = selectedList.Items.IndexOf(selectedListItem) == 0;
@@ -229,11 +229,11 @@ namespace Artisan.CraftingLists
                                 }
                             }
                             ImGui.Columns(1, null, false);
-                            if (ImGui.CollapsingHeader("Total Ingredients"))
+                            if (ImGui.CollapsingHeader("总材料"))
                             {
                                 DrawTotalIngredientsTable();
                             }
-                            if (ImGui.Button("Start Crafting List", new Vector2(ImGui.GetContentRegionAvail().X, 30)))
+                            if (ImGui.Button("开始制作清单", new Vector2(ImGui.GetContentRegionAvail().X, 30)))
                             {
                                 CraftingListFunctions.CurrentIndex = 0;
                                 Processing = true;
@@ -261,9 +261,9 @@ namespace Artisan.CraftingLists
         {
             if (ImGui.BeginTable("###ListMaterialTableRaw", 3, ImGuiTableFlags.Borders))
             {
-                ImGui.TableSetupColumn("Ingredient", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Required", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Inventory", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("材料", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("需求", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("物品栏", ImGuiTableColumnFlags.WidthFixed);
                 ImGui.TableHeadersRow();
 
                 if (SelectedListMaterials.Count == 0)
@@ -315,9 +315,9 @@ namespace Artisan.CraftingLists
 
             if (ImGui.BeginTable("###ListMaterialTableSub", 3, ImGuiTableFlags.Borders))
             {
-                ImGui.TableSetupColumn("Ingredient", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Required", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Inventory", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("材料", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("需求", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("物品栏", ImGuiTableColumnFlags.WidthFixed);
                 ImGui.TableHeadersRow();
 
                 if (SelectedListMaterials.Count == 0)
@@ -380,7 +380,7 @@ namespace Artisan.CraftingLists
                     keyboardFocus = false;
                 }
 
-                if (ImGui.InputText("List Name###listName", ref newListName, 100, ImGuiInputTextFlags.EnterReturnsTrue) && newListName.Any())
+                if (ImGui.InputText("清单名称###listName", ref newListName, 100, ImGuiInputTextFlags.EnterReturnsTrue) && newListName.Any())
                 {
                     CraftingList newList = new();
                     newList.Name = newListName;
@@ -399,7 +399,7 @@ namespace Artisan.CraftingLists
         {
             bool showOnlyCraftable = Service.Configuration.ShowOnlyCraftable;
 
-            if (ImGui.Checkbox("Show only recipes you have materials for (toggle to refresh)", ref showOnlyCraftable))
+            if (ImGui.Checkbox("只显示你有材料的配方（切换刷新）", ref showOnlyCraftable))
             {
                 Service.Configuration.ShowOnlyCraftable = showOnlyCraftable;
                 Service.Configuration.Save();
@@ -407,7 +407,7 @@ namespace Artisan.CraftingLists
             }
 
             string preview = SelectedRecipe is null ? "" : SelectedRecipe.ItemResult.Value.Name.RawString;
-            if (ImGui.BeginCombo("Select Recipe", preview))
+            if (ImGui.BeginCombo("选择配方", preview))
             {
                 DrawRecipes();
 
@@ -416,20 +416,20 @@ namespace Artisan.CraftingLists
 
             if (SelectedRecipe != null)
             {
-                if (ImGui.CollapsingHeader("Recipe Information"))
+                if (ImGui.CollapsingHeader("配方信息"))
                 {
                     DrawRecipeOptions();
                 }
                 if (SelectedRecipeRawIngredients.Count == 0)
                     AddRecipeIngredientsToList(SelectedRecipe, ref SelectedRecipeRawIngredients);
 
-                if (ImGui.CollapsingHeader("Raw Ingredients"))
+                if (ImGui.CollapsingHeader("原材料"))
                 {
-                    ImGui.Text($"Raw Ingredients Required");
+                    ImGui.Text($"所需原材料");
                     DrawRecipeSubTable();
                 }
                 ImGui.PushItemWidth(-1f);
-                if (ImGui.Button("Add to List", new Vector2(ImGui.GetContentRegionAvail().X / 2, 30)))
+                if (ImGui.Button("添加到清单", new Vector2(ImGui.GetContentRegionAvail().X / 2, 30)))
                 {
                     SelectedListMaterials.Clear();
                     listMaterials.Clear();
@@ -446,7 +446,7 @@ namespace Artisan.CraftingLists
                     Service.Configuration.Save();
                 }
                 ImGui.SameLine();
-                if (ImGui.Button("Add to List (with all subcrafts)", new Vector2(ImGui.GetContentRegionAvail().X, 30)))
+                if (ImGui.Button("添加到清单（包括所有子工艺）", new Vector2(ImGui.GetContentRegionAvail().X, 30)))
                 {
                     SelectedListMaterials.Clear();
                     listMaterials.Clear();
@@ -510,9 +510,9 @@ namespace Artisan.CraftingLists
         {
             if (ImGui.BeginTable("###SubTable", 3, ImGuiTableFlags.Borders))
             {
-                ImGui.TableSetupColumn("Ingredient", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Required", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Inventory", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("材料", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("需求", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("物品栏", ImGuiTableColumnFlags.WidthFixed);
                 ImGui.TableHeadersRow();
 
                 if (subtableList.Count == 0)
@@ -583,7 +583,7 @@ namespace Artisan.CraftingLists
 
         private static void DrawRecipes()
         {
-            ImGui.Text("Search");
+            ImGui.Text("搜索");
             ImGui.SameLine();
             ImGui.InputText("###RecipeSearch", ref Search, 100);
             if (ImGui.Selectable("", SelectedRecipe == null))
@@ -697,17 +697,17 @@ namespace Artisan.CraftingLists
             {
                 List<uint> craftingJobs = LuminaSheets.RecipeSheet.Values.Where(x => x.ItemResult.Value.Name.RawString == SelectedRecipe.ItemResult.Value.Name.RawString).Select(x => x.CraftType.Value.RowId + 8).ToList();
                 string[]? jobstrings = LuminaSheets.ClassJobSheet.Values.Where(x => craftingJobs.Any(y => y == x.RowId)).Select(x => x.Abbreviation.ToString()).ToArray();
-                ImGui.Text($"Crafted by: {String.Join(", ", jobstrings)}");
+                ImGui.Text($"制作职业: {String.Join(", ", jobstrings)}");
             }
             var ItemsRequired = SelectedRecipe.UnkData5;
 
             if (ImGui.BeginTable("###RecipeTable", 5, ImGuiTableFlags.Borders))
             {
-                ImGui.TableSetupColumn("Ingredient", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Required", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Inventory", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Method", ImGuiTableColumnFlags.WidthFixed);
-                ImGui.TableSetupColumn("Source", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("材料", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("需求", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("物品栏", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("方法", ImGuiTableColumnFlags.WidthFixed);
+                ImGui.TableSetupColumn("资源", ImGuiTableColumnFlags.WidthFixed);
                 ImGui.TableHeadersRow();
                 try
                 {
@@ -732,14 +732,14 @@ namespace Artisan.CraftingLists
                         ImGui.TableNextColumn();
                         if (ingredientRecipe is not null)
                         {
-                            if (ImGui.Button($"Crafted###search{ingredientRecipe.RowId}"))
+                            if (ImGui.Button($"已制作###search{ingredientRecipe.RowId}"))
                             {
                                 SelectedRecipe = ingredientRecipe;
                             }
                         }
                         else
                         {
-                            ImGui.Text("Gathered");
+                            ImGui.Text("已收集");
                         }
                         ImGui.TableNextColumn();
                         if (ingredientRecipe is not null)
@@ -814,7 +814,7 @@ namespace Artisan.CraftingLists
                         ImGuiEx.TextV($"Overall Progress: {CraftingListFunctions.CurrentIndex + 1} / {selectedList.Items.Count}");
                     }
 
-                    if (ImGui.Button("Cancel"))
+                    if (ImGui.Button("取消"))
                     {
                         Processing = false;
                     }
