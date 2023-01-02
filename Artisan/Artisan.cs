@@ -187,7 +187,7 @@ namespace Artisan
                             if (!Service.Configuration.DisableToasts)
                             {
                                 QuestToastOptions options = new() { IconId = newAct.Icon };
-                                Service.ToastGui.ShowQuest($"Use {newAct.Name}", options);
+                                Service.ToastGui.ShowQuest($"使用 {newAct.Name}", options);
                             }
 
                         }
@@ -196,7 +196,7 @@ namespace Artisan
                             if (!Service.Configuration.DisableToasts)
                             {
                                 QuestToastOptions options = new() { IconId = normalAct.Icon };
-                                Service.ToastGui.ShowQuest($"Use {normalAct.Name}", options);
+                                Service.ToastGui.ShowQuest($"使用 {normalAct.Name}", options);
                             }
                         }
                     }
@@ -210,7 +210,7 @@ namespace Artisan
                             if (!Service.Configuration.DisableToasts)
                             {
                                 QuestToastOptions options = new() { IconId = newAct.Icon };
-                                Service.ToastGui.ShowQuest($"Use {newAct.Name}", options);
+                                Service.ToastGui.ShowQuest($"使用 {newAct.Name}", options);
                             }
                         }
                         else
@@ -218,7 +218,7 @@ namespace Artisan
                             if (!Service.Configuration.DisableToasts)
                             {
                                 QuestToastOptions options = new() { IconId = craftAction.Icon };
-                                Service.ToastGui.ShowQuest($"Use {craftAction.Name}", options);
+                                Service.ToastGui.ShowQuest($"使用 {craftAction.Name}", options);
                             }
                         }
                     }
